@@ -118,11 +118,6 @@ service "torquebox" do
   action [:enable, :start]
 end
 
-# otherwise bundler won't work in jruby
-gem_package 'jruby-openssl' do
-  gem_binary "/opt/torquebox/current/jruby/bin/jgem"
-end
-
 #allows use of 'torquebox' command through sudo
 cookbook_file "/etc/sudoers.d/torquebox" do
   source 'sudoers'
