@@ -13,7 +13,7 @@ if node[:torquebox][:clustered][:initial_hosts_role] && node[:torquebox][:cluste
       break
     end
   end
-  
+
   (search("node", "role:#{node[:torquebox][:clustered][:initial_hosts_role]} AND chef_environment:#{node.chef_environment}") || []).each do |member_node|
     # Look up node IP based on the node attribute specified by the role
     loaded_node_ip = member_node
@@ -25,7 +25,7 @@ if node[:torquebox][:clustered][:initial_hosts_role] && node[:torquebox][:cluste
         break
       end
     end
-    
+
     initial_host_ips << loaded_node_ip unless loaded_node_ip == this_node_ip
   end
 end
@@ -41,7 +41,10 @@ template "/opt/torquebox/current/jboss/standalone/configuration/standalone-ha.xm
     :transactions_timeout => node[:torquebox][:transactions][:timeout]
   )
   mode "664"
-  notifies :restart, "service[torquebox]", :delayed
+
+  # There is a bug in chef that arbitrarily rewrites single quotes with double quotes and vice versa on deploys.
+  # The restart-notification is disabled until this is fixed.
+  # notifies :restart, "service[torquebox]", :delayed
 end
 
 template "/opt/torquebox/current/jboss/bin/standalone.conf" do
@@ -54,11 +57,14 @@ template "/opt/torquebox/current/jboss/bin/standalone.conf" do
     :server_config_file => "standalone-ha.xml"
   )
   mode "644"
-  notifies :restart, "service[torquebox]", :delayed
+
+  # There is a bug in chef that arbitrarily rewrites single quotes with double quotes and vice versa on deploys.
+  # The restart-notification is disabled until this is fixed.
+  # notifies :restart, "service[torquebox]", :delayed
 end
 
 ### MOD_CLUSTER STUFF BELOW
-# 
+#
 # # Create top level mod_cluster directory
 # directory "/opt/mod_cluster" do
 #   owner "torquebox"
@@ -66,7 +72,7 @@ end
 #   recursive true
 #   action :create
 # end
-# 
+#
 # install_from_release('mod_cluster') do
 #   release_url   "http://downloads.jboss.org/mod_cluster/#{node[:torquebox][:clustered][:mod_cluster][:version]}.Final/mod_cluster-#{node[:torquebox][:clustered][:mod_cluster][:version]}.Final-linux2-x64-ssl.tar.gz"
 #   home_dir      "/opt/mod_cluster/mod_cluster-#{node[:torquebox][:clustered][:mod_cluster][:version]}"
@@ -74,11 +80,11 @@ end
 #   version       node[:torquebox][:clustered][:mod_cluster][:version]
 #   not_if{ File.exists?("/opt/mod_cluster/mod_cluster-#{node[:torquebox][:clustered][:mod_cluster][:version]}") }
 # end
-# 
+#
 # link "/opt/mod_cluster/current" do
 #   to "/opt/mod_cluster/mod_cluster-#{node[:torquebox][:clustered][:mod_cluster][:version]}"
 # end
-# 
+#
 # execute "modcluster installhome" do
 #   command "/opt/mod_cluster/current/jboss/httpd/sbin/installhome.sh"
 #   user "root"
