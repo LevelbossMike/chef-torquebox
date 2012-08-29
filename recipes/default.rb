@@ -105,8 +105,10 @@ template "/etc/init/torquebox.conf" do
   owner "root"
   group "root"
   mode "644"
-  variables :bind_opts => bind_opts, :torquebox_dir => "/opt/torquebox/current"
-  notifies :restart, "service[torquebox]", :delayed
+  variables :bind_opts => bind_opts, :torquebox_dir => "/opt/torquebox/current", :max_file_descriptors => node[:torquebox][:max_file_descriptors]
+  # There is a bug in chef that arbitrarily rewrites certain non-changed files on deploys.
+  # The restart-notification is disabled until this is fixed.
+  # notifies :restart, "service[torquebox]", :delayed
 end
 
 execute "chown torquebox in /usr" do
