@@ -55,20 +55,13 @@ action :deploy do
     environment app_environment
   end
 
-  # Run database migrations
-  execute "jruby -S bundle exec rake db:migrate" do
-    user "torquebox"
-    group "torquebox"
-    cwd app_directory
-    environment app_environment
-  end
-
-  # Precompile asset pipeline assets
-  execute "jruby -S bundle exec rake assets:precompile" do
-    user "torquebox"
-    group "torquebox"
-    cwd app_directory
-    environment app_environment
+  new_resource.pre_deploy_rake_tasks.each do |task|
+    execute "jruby -S bundle exec rake #{task}" do
+      user "torquebox"
+      group "torquebox"
+      cwd app_directory
+      environment app_environment
+    end
   end
 
   # Construct/clobber the YAML file
@@ -83,6 +76,14 @@ action :deploy do
     path app_directory
   end
 
+  new_resource.post_deploy_rake_tasks.each do |task|
+    execute "jruby -S bundle exec rake #{task}" do
+      user "torquebox"
+      group "torquebox"
+      cwd app_directory
+      environment app_environment
+    end
+  end
 end
 
 action :undeploy do
