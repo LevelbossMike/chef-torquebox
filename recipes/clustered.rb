@@ -26,7 +26,7 @@ if node[:torquebox][:clustered][:initial_hosts_role] && node[:torquebox][:cluste
       end
     end
 
-    initial_host_ips << loaded_node_ip unless loaded_node_ip == this_node_ip
+    initial_host_ips << loaded_node_ip unless loaded_node_ip == this_node_ip || loaded_node_ip.nil?
   end
 end
 
