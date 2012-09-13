@@ -11,6 +11,7 @@ action :deploy do
     group "torquebox"
   end
 
+  # Do the "git deploy"
   timestamped_deploy "#{new_resource.install_in}/#{new_resource.name}" do
     scm_provider Chef::Provider::Git
     repo new_resource.git_repository
@@ -41,6 +42,7 @@ action :deploy do
   # Because torquebox manages its deploys independently of the Chef timestamped_deploy LWRP, it is easier to do all of
   # this work after the file system is deployed, and then hand it off to Chef. -RG 07/24/2012
 
+  # Begin the "app deploy"
   app_environment = new_resource.configuration["environment"].merge(
     "JRUBY_OPTS" => node[:torquebox][:jruby][:opts]
   )
