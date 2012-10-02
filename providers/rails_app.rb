@@ -49,6 +49,18 @@ action :deploy do
 
   app_directory = "#{new_resource.install_in}/#{new_resource.name}/current"
 
+  environment_file_content = ""
+  app_environment.each do |k, v|
+    environment_file_content += "export #{k}=#{v}\n"
+  end
+
+  file "#{app_directory}/.environment.sh" do
+    owner "root"
+    group "root"
+    mode "0755"
+    content environment_file_content
+  end
+
   # Vendor the gems
   execute "jruby -S bundle install --without development test --deployment" do
     user "torquebox"
