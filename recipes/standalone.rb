@@ -7,7 +7,8 @@ template "/opt/torquebox/current/jboss/standalone/configuration/standalone.xml" 
   variables(
     :messaging_max_delivery_attempts => node[:torquebox][:messaging][:max_delivery_attempts],
     :messaging_redelivery_delay => node[:torquebox][:messaging][:redelivery_delay],
-    :transactions_timeout => node[:torquebox][:transactions][:timeout]
+    :transactions_timeout => node[:torquebox][:transactions][:timeout],
+    :web_max_threads => node[:torquebox][:web][:max_threads]
   )
   mode "664"
   notifies :restart, "service[torquebox]", :delayed

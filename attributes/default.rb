@@ -19,6 +19,8 @@ default[:torquebox][:server][:java][:opts]["Xmx"] = "1024m"
 default[:torquebox][:server][:java][:opts]["XX:MaxPermSize"] = "512m"
 default[:torquebox][:server][:java][:opts]["XX:ReservedCodeCacheSize"] = "128m"
 
+default[:torquebox][:web][:max_threads] = nil # Defaults to AS7 default = 512 * number of CPUs
+
 default[:torquebox][:messaging][:max_delivery_attempts] = 10 # Number of times to try a job
 default[:torquebox][:messaging][:redelivery_delay] = 0 # Retry delay, set in milliseconds
 

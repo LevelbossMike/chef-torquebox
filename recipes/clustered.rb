@@ -38,7 +38,8 @@ template "/opt/torquebox/current/jboss/standalone/configuration/standalone-ha.xm
     :initial_hosts => initial_host_ips.sort,
     :messaging_max_delivery_attempts => node[:torquebox][:messaging][:max_delivery_attempts],
     :messaging_redelivery_delay => node[:torquebox][:messaging][:redelivery_delay],
-    :transactions_timeout => node[:torquebox][:transactions][:timeout]
+    :transactions_timeout => node[:torquebox][:transactions][:timeout],
+    :web_max_threads => node[:torquebox][:web][:max_threads]
   )
   mode "664"
 
