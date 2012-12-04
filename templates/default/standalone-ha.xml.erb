@@ -342,6 +342,9 @@
             </mail-session>
         </subsystem>
         <subsystem xmlns='urn:jboss:domain:messaging:1.2'>
+        <!--
+        Hornetq Clustering
+        -->
             <hornetq-server>
                 <clustered>
                     true
@@ -364,7 +367,7 @@
                         <param key='batch-delay' value='50'/>
                     </netty-connector>
                     <in-vm-connector name='in-vm' server-id='0'/>
-                    <% @initial_hosts.each_with_index do |host, index| %>
+                    <% @hornetq_hosts.each_with_index do |host, index| %>
                         <netty-connector name="server<%= index + 2 %>-connector" socket-binding="messaging-server<%= index + 2 %>"/>
                     <% end %>
                 </connectors>
@@ -407,9 +410,9 @@
                         <connector-ref>
                             netty
                         </connector-ref>
-                        <% if @initial_hosts.count > 0 %>
+                        <% if @hornetq_hosts.count > 0 %>
                             <static-connectors>
-                                <% @initial_hosts.each_with_index do |host, index| %>
+                                <% @hornetq_hosts.each_with_index do |host, index| %>
                                     <connector-ref>
                                         server<%= index + 2 %>-connector
                                     </connector-ref>
@@ -656,7 +659,7 @@
         <outbound-socket-binding name='mail-smtp'>
             <remote-destination host='localhost' port='25'/>
         </outbound-socket-binding>
-        <% @initial_hosts.each_with_index do |host, index| %>
+        <% @hornetq_hosts.each_with_index do |host, index| %>
             <outbound-socket-binding name="messaging-server<%= index + 2 %>">
                 <remote-destination host="<%= host %>" port="5445"/>
             </outbound-socket-binding>
